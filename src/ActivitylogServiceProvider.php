@@ -18,6 +18,8 @@ class ActivitylogServiceProvider extends PackageServiceProvider
         ->name('laravel-activitylog')
         ->hasConfigFile('activitylog')
         ->hasCommand(CleanActivitylogCommand::class);
+
+        $this->app->register(ActivityEventProvider::class);
     }
 
     public function registeringPackage()
@@ -49,4 +51,5 @@ class ActivitylogServiceProvider extends PackageServiceProvider
 
         return new $activityModelClassName();
     }
+
 }

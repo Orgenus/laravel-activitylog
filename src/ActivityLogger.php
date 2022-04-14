@@ -13,6 +13,8 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Macroable;
 use Spatie\Activitylog\Contracts\Activity as ActivityContract;
+use Spatie\Activitylog\Events\ActivityEvents;
+use Spatie\Activitylog\Messages\ActivityMessage;
 
 class ActivityLogger
 {
@@ -173,12 +175,11 @@ class ActivityLogger
             $this->tap([$activity->subject, 'tapActivity'], $activity->event ?? '');
         }
 
-        $payload = [
-            'app_name' => env('APP_NAME'),
-            'data' => $activity
-        ];
+        $messagePayload = new ActivityMessage();
+        $messagePayload->setAppName(env('SERVICE_NAME', env('APP_NAME')));
+        $messagePayload->setActivtyData($activity);
 
-        \Illuminate\Support\Facades\Queue::pushRaw(json_encode($payload), config('activitylog.queue'));
+        event(new ActivityEvents($messagePayload));
 
         $this->activity = null;
 
