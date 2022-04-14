@@ -6,6 +6,7 @@ use Closure;
 use DateTimeInterface;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Queue\Queue;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
@@ -172,7 +173,12 @@ class ActivityLogger
             $this->tap([$activity->subject, 'tapActivity'], $activity->event ?? '');
         }
 
-        $activity->save();
+        $payload = [
+            'app_name' => env('APP_NAME'),
+            'data' => $activity
+        ];
+
+        \Illuminate\Support\Facades\Queue::pushRaw(json_encode($payload), config('activitylog.queue'));
 
         $this->activity = null;
 
