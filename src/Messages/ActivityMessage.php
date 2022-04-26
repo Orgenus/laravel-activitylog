@@ -4,8 +4,26 @@ namespace Spatie\Activitylog\Messages;
 
 class ActivityMessage
 {
-    public $activtyData;
-    public $appName;
+    public mixed $activtyData;
+    public mixed $appName;
+    public mixed $subjectData;
+
+    /**
+     * @return mixed
+     */
+    public function getSubjectData(): mixed
+    {
+        return $this->subjectData;
+    }
+
+    /**
+     * @param mixed $subjectData
+     */
+    public function setSubjectData(mixed $subjectData): void
+    {
+        $this->subjectData = $subjectData;
+    }
+
 
     /**
      * @return mixed

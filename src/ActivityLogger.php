@@ -177,6 +177,9 @@ class ActivityLogger
 
         $messagePayload = new ActivityMessage();
         $messagePayload->setAppName(env('SERVICE_NAME', env('APP_NAME')));
+        if(isset($activity->subject))
+            $messagePayload->setSubjectData($activity->subject->toArray());
+
         $messagePayload->setActivtyData($activity);
 
         event(new ActivityEvents($messagePayload));
